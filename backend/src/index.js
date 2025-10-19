@@ -187,3 +187,6 @@ function initializeWebSocketServer() {
 setInterval(() => {
   console.log('Server is running at', new Date().toISOString());
 }, 30000);
+
+// Export for Vercel serverless
+export default app;
