@@ -43,8 +43,23 @@ app.use(helmet({
 app.use(securityHeaders);
 
 // CORS configuration
+const allowedOrigins = [
+  'http://localhost:3000',
+  process.env.FRONTEND_URL,
+  'https://inventory-management-demo-production.up.railway.app'
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.some(allowed => origin.startsWith(allowed.replace('https://', '').replace('http://', '')))) {
+      callback(null, true);
+    } else {
+      callback(null, true); // For now, allow all during setup
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200
 }));
