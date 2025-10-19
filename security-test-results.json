@@ -1,0 +1,143 @@
+{
+  "timestamp": "2025-10-14T09:27:50.697Z",
+  "results": [
+    {
+      "test": "Invalid Password Protection",
+      "status": "PASS",
+      "details": "Wrong password properly rejected with status 401",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:50.789Z"
+    },
+    {
+      "test": "Empty Credentials Protection",
+      "status": "PASS",
+      "details": "Empty credentials properly rejected with status 400",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:50.795Z"
+    },
+    {
+      "test": "Unauthorized Access Protection",
+      "status": "PASS",
+      "details": "Unauthorized access properly blocked with status 401",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:50.800Z"
+    },
+    {
+      "test": "Invalid Token Protection",
+      "status": "PASS",
+      "details": "Invalid token properly rejected with status 401",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:50.804Z"
+    },
+    {
+      "test": "Malformed Auth Header Protection",
+      "status": "PASS",
+      "details": "Malformed header properly rejected with status 401",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:50.808Z"
+    },
+    {
+      "test": "SQL Injection Protection (Search)",
+      "status": "PASS",
+      "details": "Payload \"'; DROP TABLE products; --\" safely handled - no malicious execution detected",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:50.891Z"
+    },
+    {
+      "test": "SQL Injection Protection (Search)",
+      "status": "PASS",
+      "details": "Payload \"' OR '1'='1\" safely handled - no malicious execution detected",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:50.896Z"
+    },
+    {
+      "test": "SQL Injection Protection (Search)",
+      "status": "PASS",
+      "details": "Payload \"' UNION SELECT * FROM users --\" safely handled - no malicious execution detected",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:50.902Z"
+    },
+    {
+      "test": "SQL Injection Protection (Search)",
+      "status": "PASS",
+      "details": "Payload \"'; DELETE FROM customers; --\" safely handled - no malicious execution detected",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:50.909Z"
+    },
+    {
+      "test": "SQL Injection Protection (Search)",
+      "status": "PASS",
+      "details": "Payload \"admin'/**/OR/**/1=1#\" safely handled - no malicious execution detected",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:50.917Z"
+    },
+    {
+      "test": "SQL Injection Protection (Customer Creation)",
+      "status": "PASS",
+      "details": "Malicious customer data properly rejected with status 500",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:50.927Z"
+    },
+    {
+      "test": "XSS Protection (Product Fields)",
+      "status": "PASS",
+      "details": "XSS payload \"<script>alert('XSS')</script>\" properly rejected with status 500",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:51.003Z"
+    },
+    {
+      "test": "XSS Protection (Product Fields)",
+      "status": "PASS",
+      "details": "XSS payload \"<img src=x onerror=alert('XSS')>\" was properly sanitized or escaped",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:51.020Z"
+    },
+    {
+      "test": "XSS Protection (Product Fields)",
+      "status": "PASS",
+      "details": "XSS payload \"javascript:alert('XSS')\" was properly sanitized or escaped",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:51.115Z"
+    },
+    {
+      "test": "XSS Protection (Product Fields)",
+      "status": "PASS",
+      "details": "XSS payload \"<svg onload=alert('XSS')>\" was properly sanitized or escaped",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:51.207Z"
+    },
+    {
+      "test": "XSS Protection (Product Fields)",
+      "status": "PASS",
+      "details": "XSS payload \"';alert('XSS');//\" was properly sanitized or escaped",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:51.298Z"
+    },
+    {
+      "test": "Password Protection for Deletion",
+      "status": "PASS",
+      "details": "Deletion properly blocked without password with status 400",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:51.460Z"
+    },
+    {
+      "test": "Wrong Password Protection",
+      "status": "PASS",
+      "details": "Deletion properly blocked with wrong password, status 403",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:51.538Z"
+    },
+    {
+      "test": "Rate Limiting Protection",
+      "status": "FAIL",
+      "details": "No rate limiting detected - system may be vulnerable to brute force attacks",
+      "error": "",
+      "timestamp": "2025-10-14T09:27:51.900Z"
+    }
+  ],
+  "summary": {
+    "passed": 18,
+    "failed": 1,
+    "total": 19
+  }
+}

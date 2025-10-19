@@ -1,0 +1,166 @@
+{
+  "timestamp": "2025-10-14T09:27:42.583Z",
+  "results": [
+    {
+      "test": "User Login",
+      "status": "PASS",
+      "details": "Successfully logged in. Token length: 279",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:43.273Z"
+    },
+    {
+      "test": "Protected Route Access",
+      "status": "PASS",
+      "details": "Successfully accessed protected route. Status: 200",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:43.294Z"
+    },
+    {
+      "test": "Products List Retrieval",
+      "status": "PASS",
+      "details": "Found 73 existing products",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:43.308Z"
+    },
+    {
+      "test": "Product Creation",
+      "status": "PASS",
+      "details": "Product created with ID: TEST_1760434063295",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:43.331Z"
+    },
+    {
+      "test": "Product Update",
+      "status": "PASS",
+      "details": "Product updated successfully. Status: 200",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:43.349Z"
+    },
+    {
+      "test": "Product Search",
+      "status": "PASS",
+      "details": "Search for 'TEST_1760434063295' returned 1 results",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:43.359Z"
+    },
+    {
+      "test": "Product Deletion",
+      "status": "PASS",
+      "details": "Test product deleted successfully. Status: 200",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:43.471Z"
+    },
+    {
+      "test": "Customers List Retrieval",
+      "status": "PASS",
+      "details": "Found 32 existing customers",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:43.529Z"
+    },
+    {
+      "test": "Customer Creation",
+      "status": "PASS",
+      "details": "Customer created with ID: 84",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:43.552Z"
+    },
+    {
+      "test": "Customer Update",
+      "status": "PASS",
+      "details": "Customer updated successfully. Status: 200",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:43.571Z"
+    },
+    {
+      "test": "Customer Deletion",
+      "status": "PASS",
+      "details": "Test customer deleted successfully. Status: 200",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:43.682Z"
+    },
+    {
+      "test": "Sale Creation",
+      "status": "PASS",
+      "details": "Sale created with ID: 99",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:43.735Z"
+    },
+    {
+      "test": "Sale Detail Retrieval",
+      "status": "PASS",
+      "details": "Sale details retrieved with 1 items",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:43.747Z"
+    },
+    {
+      "test": "Sales List Retrieval",
+      "status": "PASS",
+      "details": "Found 55 total sales",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:43.807Z"
+    },
+    {
+      "test": "Sale Calculations",
+      "status": "PASS",
+      "details": "Item Total: 300, Item Discount: 30, Subtotal: 270, Sale Discount: 13.5, Final Total: 256.5",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:43.807Z"
+    },
+    {
+      "test": "Sales System Cleanup",
+      "status": "PASS",
+      "details": "Test data cleaned up successfully",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:44.128Z"
+    },
+    {
+      "test": "Initial Sale Creation",
+      "status": "PASS",
+      "details": "Sale created with original price: PKR 100.00",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:44.174Z"
+    },
+    {
+      "test": "Product Price Update",
+      "status": "PASS",
+      "details": "Product price updated from PKR 100.00 to PKR 150.00",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:44.188Z"
+    },
+    {
+      "test": "Historical Price Preservation",
+      "status": "PASS",
+      "details": "Sale still shows original price: PKR 100, while current product price is PKR 150.00",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:44.198Z"
+    },
+    {
+      "test": "Percentage Discount Calculation",
+      "status": "PASS",
+      "details": "Price: 100 × Qty: 2 = 200, Discount: 20 (10%), Total: 180",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:44.502Z"
+    },
+    {
+      "test": "Fixed Amount Discount Calculation",
+      "status": "PASS",
+      "details": "Price: 150 × Qty: 3 = 450, Discount: 50 (fixed), Total: 400",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:44.502Z"
+    },
+    {
+      "test": "Product Validation",
+      "status": "PASS",
+      "details": "Correctly rejected invalid data with status 400",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:44.513Z"
+    },
+    {
+      "test": "Customer Validation",
+      "status": "PASS",
+      "details": "Correctly rejected invalid data with status 400",
+      "error": null,
+      "timestamp": "2025-10-14T09:27:44.520Z"
+    }
+  ]
+}

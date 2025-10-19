@@ -1,0 +1,109 @@
+{
+  "timestamp": "2025-10-14T09:32:59.232Z",
+  "results": [
+    {
+      "test": "Products List Response Time",
+      "status": "PASS",
+      "details": "Status: 200, Data length: 29168 chars",
+      "responseTime": "9ms",
+      "error": "",
+      "timestamp": "2025-10-14T09:32:59.343Z"
+    },
+    {
+      "test": "Customers List Response Time",
+      "status": "PASS",
+      "details": "Status: 200, Data length: 10713 chars",
+      "responseTime": "19ms",
+      "error": "",
+      "timestamp": "2025-10-14T09:32:59.363Z"
+    },
+    {
+      "test": "Sales List Response Time",
+      "status": "PASS",
+      "details": "Status: 200, Data length: 81775 chars",
+      "responseTime": "44ms",
+      "error": "",
+      "timestamp": "2025-10-14T09:32:59.409Z"
+    },
+    {
+      "test": "Dashboard Stats Response Time",
+      "status": "PASS",
+      "details": "Status: 200, Data length: 1718 chars",
+      "responseTime": "12ms",
+      "error": "",
+      "timestamp": "2025-10-14T09:32:59.421Z"
+    },
+    {
+      "test": "Reports Response Time",
+      "status": "PASS",
+      "details": "Status: 200, Data length: 1891 chars",
+      "responseTime": "8ms",
+      "error": "",
+      "timestamp": "2025-10-14T09:32:59.430Z"
+    },
+    {
+      "test": "Bulk Product Creation",
+      "status": "PASS",
+      "details": "Created 10/10 products",
+      "responseTime": "138ms",
+      "error": "",
+      "timestamp": "2025-10-14T09:32:59.639Z"
+    },
+    {
+      "test": "Bulk Data Retrieval",
+      "status": "PASS",
+      "details": "Retrieved 105 products",
+      "responseTime": "7ms",
+      "error": "",
+      "timestamp": "2025-10-14T09:32:59.647Z"
+    },
+    {
+      "test": "Bulk Product Deletion",
+      "status": "PASS",
+      "details": "Deleted 10/10 products",
+      "responseTime": "774ms",
+      "error": "",
+      "timestamp": "2025-10-14T09:33:00.422Z"
+    },
+    {
+      "test": "Concurrent User Access",
+      "status": "PASS",
+      "details": "5/5 requests successful",
+      "responseTime": "19ms",
+      "error": "",
+      "timestamp": "2025-10-14T09:33:00.522Z"
+    },
+    {
+      "test": "Concurrent Product Creation",
+      "status": "PASS",
+      "details": "3/3 creations successful",
+      "responseTime": "21ms",
+      "error": "",
+      "timestamp": "2025-10-14T09:33:00.543Z"
+    },
+    {
+      "test": "Large Data Retrieval Efficiency",
+      "status": "PASS",
+      "details": "Retrieved 108 records (32.49 KB)",
+      "responseTime": "7ms",
+      "error": "",
+      "timestamp": "2025-10-14T09:33:00.861Z"
+    },
+    {
+      "test": "Sequential Request Handling",
+      "status": "PASS",
+      "details": "10/10 sequential requests successful",
+      "responseTime": "82ms",
+      "error": "",
+      "timestamp": "2025-10-14T09:33:00.944Z"
+    }
+  ],
+  "summary": {
+    "passed": 12,
+    "failed": 0,
+    "total": 12,
+    "averageResponseTime": 95,
+    "maxResponseTime": 774,
+    "minResponseTime": 7
+  }
+}
