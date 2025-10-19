@@ -1,29 +1,12 @@
 {
-    "version": 2,
-    "builds": [
+    "buildCommand": "cd frontend && npm install --legacy-peer-deps && npm run build",
+    "outputDirectory": "frontend/build",
+    "installCommand": "npm install --legacy-peer-deps --prefix frontend",
+    "framework": null,
+    "rewrites": [
         {
-            "src": "backend/src/index.js",
-            "use": "@vercel/node"
-        },
-        {
-            "src": "frontend/package.json",
-            "use": "@vercel/static-build",
-            "config": {
-                "distDir": "build"
-            }
+            "source": "/api/:path*",
+            "destination": "/api/index.js"
         }
-    ],
-    "routes": [
-        {
-            "src": "/api/(.*)",
-            "dest": "backend/src/index.js"
-        },
-        {
-            "src": "/(.*)",
-            "dest": "frontend/$1"
-        }
-    ],
-    "env": {
-        "NODE_ENV": "production"
-    }
+    ]
 }
