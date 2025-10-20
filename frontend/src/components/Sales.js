@@ -335,16 +335,16 @@ function Sales() {
         return false;
       }
 
-      // Global search filter
+      // Global search filter (safe guards against null/undefined)
       if (globalSearch) {
-        const searchTerm = globalSearch.toLowerCase();
+        const searchTerm = (globalSearch || '').toString().toLowerCase();
         const searchableFields = [
-          sale.customer_name || '',
-          sale.customer_brand_name || '',
-          sale.cashier_name || '',
-          sale.id?.toString() || '',
-          sale.total_amount?.toString() || '',
-          sale.status || ''
+          (sale.customer_name || '').toString(),
+          (sale.customer_brand_name || '').toString(),
+          (sale.cashier_name || '').toString(),
+          (sale.id?.toString() || '').toString(),
+          (sale.total_amount?.toString() || '').toString(),
+          (sale.status || '').toString()
         ].join(' ').toLowerCase();
 
         if (!searchableFields.includes(searchTerm)) {
