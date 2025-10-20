@@ -303,15 +303,21 @@ function Sales() {
   const getFilteredSales = useMemo(() => {
     return sales.filter(sale => {
       // Customer brand filter
-      if (filterCustomerBrand && (!sale.customer_brand_name ||
-        !sale.customer_brand_name.toLowerCase().includes(filterCustomerBrand.toLowerCase()))) {
-        return false;
+      if (filterCustomerBrand) {
+        const brandName = String(sale.customer_brand_name || '').toLowerCase();
+        const searchTerm = String(filterCustomerBrand || '').toLowerCase();
+        if (!brandName.includes(searchTerm)) {
+          return false;
+        }
       }
 
       // Customer name filter
-      if (filterCustomerName && (!sale.customer_name ||
-        !sale.customer_name.toLowerCase().includes(filterCustomerName.toLowerCase()))) {
-        return false;
+      if (filterCustomerName) {
+        const customerName = String(sale.customer_name || '').toLowerCase();
+        const searchTerm = String(filterCustomerName || '').toLowerCase();
+        if (!customerName.includes(searchTerm)) {
+          return false;
+        }
       }
 
       // Amount range filters
@@ -330,9 +336,12 @@ function Sales() {
       }
 
       // Cashier filter
-      if (filterCashier && (!sale.cashier_name ||
-        !sale.cashier_name.toLowerCase().includes(filterCashier.toLowerCase()))) {
-        return false;
+      if (filterCashier) {
+        const cashierName = String(sale.cashier_name || '').toLowerCase();
+        const searchTerm = String(filterCashier || '').toLowerCase();
+        if (!cashierName.includes(searchTerm)) {
+          return false;
+        }
       }
 
       // Global search filter (safe guards against null/undefined)
@@ -362,12 +371,12 @@ function Sales() {
           valueB = parseFloat(b.total_amount || 0);
           break;
         case 'customer':
-          valueA = (a.customer_name || 'Walk-in Customer').toLowerCase();
-          valueB = (b.customer_name || 'Walk-in Customer').toLowerCase();
+          valueA = String(a.customer_name || 'Walk-in Customer').toLowerCase();
+          valueB = String(b.customer_name || 'Walk-in Customer').toLowerCase();
           break;
         case 'status':
-          valueA = (a.status || '').toLowerCase();
-          valueB = (b.status || '').toLowerCase();
+          valueA = String(a.status || '').toLowerCase();
+          valueB = String(b.status || '').toLowerCase();
           break;
         case 'date':
         default:
