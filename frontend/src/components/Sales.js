@@ -769,6 +769,40 @@ function Sales() {
                   }}
                 />
               </div>
+              <div className="input-group" style={{ display: 'flex', alignItems: 'flex-end' }}>
+                <button
+                  onClick={() => {
+                    const today = new Date().toISOString().slice(0, 10);
+                    setFrom(today);
+                    setTo(today);
+                  }}
+                  style={{
+                    background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '10px 20px',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    fontSize: '0.875rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    transition: 'all 0.2s',
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = 'translateY(-2px)';
+                    e.target.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                  }}
+                >
+                  📅 Today
+                </button>
+              </div>
               <div className="input-group">
                 <label className="input-label" style={{
                   fontSize: '0.875rem',

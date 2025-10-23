@@ -209,7 +209,8 @@ function CashierPOS() {
                     let wholesale = parseFloat(found.wholesale_price);
                     if (isNaN(retail)) retail = 0;
                     if (isNaN(wholesale)) wholesale = 0;
-                    let price = currentSale.customerType === 'long-term' ? wholesale : retail;
+                    // Match backend logic: 'longterm' or 'wholesale' use wholesale price
+                    let price = (currentSale.customerType === 'longterm' || currentSale.customerType === 'wholesale') ? wholesale : retail;
 
                     // Add to cart
                     updateCurrentSale({
@@ -333,7 +334,8 @@ function CashierPOS() {
         if (isNaN(wholesale)) wholesale = 0;
         if (wholesale < 0) wholesale = 0;
 
-        let price = currentSale.customerType === 'long-term' ? wholesale : retail;
+        // Match backend logic: 'longterm' or 'wholesale' use wholesale price
+        let price = (currentSale.customerType === 'longterm' || currentSale.customerType === 'wholesale') ? wholesale : retail;
         if (price <= 0) {
             return setError(`Invalid final price for ${product.name}`);
         }
@@ -366,7 +368,8 @@ function CashierPOS() {
 
         updateCurrentSale({
             cart: currentSale.cart.map(item => {
-                let priceRaw = currentSale.customerType === 'long-term' ? item.wholesale_price : item.retail_price;
+                // Match backend logic: 'longterm' or 'wholesale' use wholesale price
+                let priceRaw = (currentSale.customerType === 'longterm' || currentSale.customerType === 'wholesale') ? item.wholesale_price : item.retail_price;
                 let price = parseFloat(priceRaw);
                 if (isNaN(price)) price = 0;
                 return { ...item, price };
@@ -455,16 +458,58 @@ function CashierPOS() {
             const token = localStorage.getItem('token');
             const username = localStorage.getItem('username') || 'cashier';
 
+            // Force recalculate prices based on customer type before submitting
+            const updatedCart = currentSale.cart.map(item => {
+                let correctPrice;
+                if (currentSale.customerType === 'wholesale') {
+                    correctPrice = parseFloat(item.wholesale_price) || 0;
+                } else {
+                    correctPrice = parseFloat(item.retail_price) || 0;
+                }
+                return { ...item, price: correctPrice };
+            });
+
+            // Update the current sale with correct prices
+            updateCurrentSale({ cart: updatedCart });
+
+            // Calculate totals properly with corrected prices
+            const subtotal = updatedCart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            const discountAmount = 0; // No discount applied in this simple version
+            const totalAmount = subtotal - discountAmount;
+
             const saleData = {
-                customer_type: currentSale.customerType,
+                customer_id: null, // Set to null for walk-in customers
+                customer_type: currentSale.customerType || 'retail',
                 cashier: username,
-                items: currentSale.cart.map(item => ({
+                items: updatedCart.map(item => ({
                     product_id: item.id,
                     quantity: item.quantity,
                     price: item.price
                 })),
-                payment_method: 'cash'
+                subtotal: subtotal,
+                discount_amount: discountAmount,
+                total_amount: totalAmount,
+                payment_method: 'cash',
+                paid_amount: totalAmount
             };
+
+            // Log price validation details for debugging
+            console.log('[PRICE VALIDATION] Sale details:', {
+                customerType: saleData.customer_type,
+                cartItems: updatedCart.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    retail_price: item.retail_price,
+                    wholesale_price: item.wholesale_price,
+                    selected_price: item.price,
+                    quantity: item.quantity
+                })),
+                submittedItems: saleData.items.map(item => ({
+                    product_id: item.product_id,
+                    price: item.price,
+                    quantity: item.quantity
+                }))
+            });
 
             console.log('[AUDIT] Submitting sale:', saleData);
 
@@ -639,7 +684,7 @@ function CashierPOS() {
                             style={{ padding: '8px', marginLeft: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
                         >
                             <option value="retail">Retail Customer</option>
-                            <option value="long-term">Wholesale Customer</option>
+                            <option value="wholesale">Wholesale Customer</option>
                         </select>
                     </div>
 

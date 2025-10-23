@@ -336,6 +336,9 @@ function OwnerPOS() {
       // For Owner POS, always set cashier as "Owner" to clearly identify owner-completed sales
       const cashierName = 'Owner';
 
+      const subtotal = calculateSubtotal(currentSale.cart);
+      const totalAmount = calculateTotal(currentSale.cart, currentSale.discountType, currentSale.discountValue);
+
       const saleData = {
         customer_name: currentSale.customerName,
         customer_id: currentSale.customerId,
@@ -344,15 +347,16 @@ function OwnerPOS() {
         items: currentSale.cart.map(item => ({
           product_id: item.id,
           quantity: item.quantity,
-          price: item.price,
+          price: item.originalPrice || item.price, // Send original price for backend validation
           item_discount_type: item.itemDiscountType || 'none',
           item_discount_value: item.itemDiscountValue || 0
         })),
         payment_method: 'cash', // Default for now
+        paid_amount: totalAmount, // Add paid amount for validation
         overall_discount_type: currentSale.discountType,
         overall_discount_value: currentSale.discountValue || 0,
-        subtotal: calculateSubtotal(currentSale.cart),
-        total_amount: calculateTotal(currentSale.cart, currentSale.discountType, currentSale.discountValue)
+        subtotal: subtotal,
+        total_amount: totalAmount
       };
 
       console.log('Sending sale data to backend:', saleData);
@@ -1176,31 +1180,40 @@ function OwnerPOS() {
                 borderRadius: '6px',
                 fontSize: '11px'
               }}>
-                <div style={{
-                  padding: '4px 8px',
-                  borderRadius: '4px',
-                  backgroundColor: focusMode === 'search' ? '#3498db' : '#e9ecef',
-                  color: focusMode === 'search' ? 'white' : '#6c757d',
-                  transition: 'all 0.2s'
-                }}>
+                <div
+                  onClick={() => setFocusMode('search')}
+                  style={{
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    backgroundColor: focusMode === 'search' ? '#3498db' : '#e9ecef',
+                    color: focusMode === 'search' ? 'white' : '#6c757d',
+                    transition: 'all 0.2s',
+                    cursor: 'pointer'
+                  }}>
                   🔍 Search {focusMode === 'search' && '(Active)'}
                 </div>
-                <div style={{
-                  padding: '4px 8px',
-                  borderRadius: '4px',
-                  backgroundColor: focusMode === 'cart' ? '#3498db' : '#e9ecef',
-                  color: focusMode === 'cart' ? 'white' : '#6c757d',
-                  transition: 'all 0.2s'
-                }}>
+                <div
+                  onClick={() => setFocusMode('cart')}
+                  style={{
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    backgroundColor: focusMode === 'cart' ? '#3498db' : '#e9ecef',
+                    color: focusMode === 'cart' ? 'white' : '#6c757d',
+                    transition: 'all 0.2s',
+                    cursor: 'pointer'
+                  }}>
                   🛒 Cart {focusMode === 'cart' && '(Active)'}
                 </div>
-                <div style={{
-                  padding: '4px 8px',
-                  borderRadius: '4px',
-                  backgroundColor: focusMode === 'actions' ? '#3498db' : '#e9ecef',
-                  color: focusMode === 'actions' ? 'white' : '#6c757d',
-                  transition: 'all 0.2s'
-                }}>
+                <div
+                  onClick={() => setFocusMode('actions')}
+                  style={{
+                    padding: '4px 8px',
+                    borderRadius: '4px',
+                    backgroundColor: focusMode === 'actions' ? '#3498db' : '#e9ecef',
+                    color: focusMode === 'actions' ? 'white' : '#6c757d',
+                    transition: 'all 0.2s',
+                    cursor: 'pointer'
+                  }}>
                   ⚡ Actions {focusMode === 'actions' && '(Active)'}
                 </div>
               </div>
@@ -2415,20 +2428,6 @@ function OwnerPOS() {
             </div>
 
             <div style={{ display: 'flex', gap: '10px' }}>
-              <button
-                onClick={() => window.print()}
-                style={{
-                  flex: 1,
-                  padding: '10px',
-                  backgroundColor: '#3498db',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer'
-                }}
-              >
-                🖨️ Print Receipt
-              </button>
               <button
                 onClick={() => handleDownloadInvoice(lastCompletedSale)}
                 style={{

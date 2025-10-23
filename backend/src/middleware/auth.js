@@ -278,14 +278,20 @@ export function securityHeaders(req, res, next) {
 
 // Reusable password verification function for secure deletion operations
 export async function verifyPassword(req, res, next) {
+  console.log('verifyPassword middleware called');
+  console.log('Request body:', req.body);
+  console.log('Request method:', req.method);
+
   const { password } = req.body;
   const userId = req.user && req.user.id;
 
   if (!userId) {
+    console.log('verifyPassword failed: No userId');
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
   if (!password) {
+    console.log('verifyPassword failed: No password provided');
     return res.status(400).json({ message: 'Password required for deletion' });
   }
 
@@ -295,6 +301,7 @@ export async function verifyPassword(req, res, next) {
     const [users] = await pool.query('SELECT password FROM users WHERE id = ?', [userId]);
 
     if (!users.length) {
+      console.log('verifyPassword failed: User not found');
       return res.status(401).json({ message: 'User not found' });
     }
 
@@ -302,9 +309,11 @@ export async function verifyPassword(req, res, next) {
     const match = await bcrypt.compare(password, hash);
 
     if (!match) {
+      console.log('verifyPassword failed: Incorrect password');
       return res.status(403).json({ message: 'Incorrect password' });
     }
 
+    console.log('verifyPassword success');
     // Password verified, continue to deletion
     next();
   } catch (error) {

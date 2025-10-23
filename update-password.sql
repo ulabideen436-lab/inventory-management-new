@@ -1,1 +1,0 @@
-UPDATE users SET password = '$2b$10$3sHerQhdLHIQTzzB1WGGheua9DIVkIernLAMCAJFrn7m1mVUOBKJa' WHERE username = 'owner';

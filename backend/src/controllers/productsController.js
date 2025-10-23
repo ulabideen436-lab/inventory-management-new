@@ -7,11 +7,22 @@ export async function getProducts(req, res) {
     const { search, include_deleted } = req.query;
     let query = 'SELECT * FROM products';
     let params = [];
+    let whereClauses = [];
+
+    // Exclude deleted products by default (unless include_deleted is true)
+    if (include_deleted !== 'true') {
+      whereClauses.push('deleted_at IS NULL');
+    }
 
     // Build search condition
     if (search) {
-      query += ` WHERE (id LIKE ? OR name LIKE ?)`;
+      whereClauses.push('(id LIKE ? OR name LIKE ?)');
       params = [`%${search}%`, `%${search}%`];
+    }
+
+    // Add WHERE clause if there are conditions
+    if (whereClauses.length > 0) {
+      query += ' WHERE ' + whereClauses.join(' AND ');
     }
 
     // Order by most recently added (assuming id is sequential or use created_at if available)
