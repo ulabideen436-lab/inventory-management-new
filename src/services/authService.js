@@ -2,26 +2,67 @@
 import { 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
   updateProfile,
   sendPasswordResetEmail
 } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { auth, db } from './firebase.js';
+import { auth, db } from '../config/firebase.js';
 
 class AuthService {
-  // Sign in user
+  constructor() {
+    this.googleProvider = new GoogleAuthProvider();
+    // Force account selection on Google sign-in
+    this.googleProvider.setCustomParameters({
+      prompt: 'select_account'
+    });
+  }
+
+  // Sign in with email and password
   async signIn(email, password) {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      return userCredential.user;
+      const userData = await this.getUserData(userCredential.user.uid);
+      return { user: userCredential.user, userData };
     } catch (error) {
-      throw new Error(error.message);
+      throw this.handleAuthError(error);
     }
   }
 
-  // Sign up user
+  // Sign in with Google
+  async signInWithGoogle() {
+    try {
+      const result = await signInWithPopup(auth, this.googleProvider);
+      const user = result.user;
+      
+      // Check if user exists in Firestore
+      let userData = await this.getUserData(user.uid);
+      
+      // If new user, create their profile
+      if (!userData) {
+        userData = {
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          role: 'cashier', // Default role for new Google users
+          createdAt: new Date(),
+          isActive: true,
+          provider: 'google'
+        };
+        
+        await setDoc(doc(db, 'users', user.uid), userData);
+      }
+      
+      return { user, userData };
+    } catch (error) {
+      throw this.handleAuthError(error);
+    }
+  }
+
+  // Sign up user with email and password
   async signUp(email, password, displayName, role = 'cashier') {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -31,17 +72,20 @@ class AuthService {
       await updateProfile(user, { displayName });
 
       // Create user document in Firestore
-      await setDoc(doc(db, 'users', user.uid), {
+      const userData = {
         displayName,
         email,
         role,
         createdAt: new Date(),
-        isActive: true
-      });
+        isActive: true,
+        provider: 'email'
+      };
+      
+      await setDoc(doc(db, 'users', user.uid), userData);
 
-      return user;
+      return { user, userData };
     } catch (error) {
-      throw new Error(error.message);
+      throw this.handleAuthError(error);
     }
   }
 
@@ -49,8 +93,12 @@ class AuthService {
   async signOut() {
     try {
       await signOut(auth);
+      // Clear local storage
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('role');
     } catch (error) {
-      throw new Error(error.message);
+      throw this.handleAuthError(error);
     }
   }
 
@@ -73,7 +121,7 @@ class AuthService {
       }
       return null;
     } catch (error) {
-      throw new Error(error.message);
+      throw this.handleAuthError(error);
     }
   }
 
@@ -81,9 +129,50 @@ class AuthService {
   async resetPassword(email) {
     try {
       await sendPasswordResetEmail(auth, email);
+      return { success: true, message: 'Password reset email sent!' };
     } catch (error) {
-      throw new Error(error.message);
+      throw this.handleAuthError(error);
     }
+  }
+
+  // Update user role (admin only)
+  async updateUserRole(uid, newRole) {
+    try {
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        throw new Error('No authenticated user');
+      }
+
+      const currentUserData = await this.getUserData(currentUser.uid);
+      if (currentUserData?.role !== 'owner') {
+        throw new Error('Permission denied. Only owners can update roles.');
+      }
+
+      await setDoc(doc(db, 'users', uid), { role: newRole }, { merge: true });
+      return { success: true, message: 'User role updated successfully' };
+    } catch (error) {
+      throw this.handleAuthError(error);
+    }
+  }
+
+  // Handle Firebase auth errors
+  handleAuthError(error) {
+    const errorMessages = {
+      'auth/invalid-email': 'Invalid email address',
+      'auth/user-disabled': 'This account has been disabled',
+      'auth/user-not-found': 'No account found with this email',
+      'auth/wrong-password': 'Incorrect password',
+      'auth/email-already-in-use': 'An account already exists with this email',
+      'auth/weak-password': 'Password should be at least 6 characters',
+      'auth/too-many-requests': 'Too many attempts. Please try again later',
+      'auth/network-request-failed': 'Network error. Please check your connection',
+      'auth/popup-closed-by-user': 'Sign-in popup was closed',
+      'auth/cancelled-popup-request': 'Only one popup request is allowed at a time',
+      'auth/operation-not-allowed': 'This sign-in method is not enabled',
+    };
+
+    const message = errorMessages[error.code] || error.message || 'Authentication failed';
+    return new Error(message);
   }
 }
 
