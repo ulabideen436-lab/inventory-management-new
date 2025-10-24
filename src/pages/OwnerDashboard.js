@@ -5,6 +5,7 @@ import Sales from '../components/Sales';
 import Settings from '../components/Settings';
 import Suppliers from '../components/Suppliers';
 import Transactions from '../components/Transactions';
+import UserManagement from './UserManagement';
 
 function OwnerDashboard() {
   const location = useLocation();
@@ -171,6 +172,25 @@ function OwnerDashboard() {
           <span style={{ color: '#bdc3c7', margin: '0 8px' }}>|</span>
 
           <Link
+            to="/owner/users"
+            style={isActive('/owner/users') ? activeLinkStyle : inactiveLinkStyle}
+            onMouseOver={(e) => {
+              if (!isActive('/owner/users')) {
+                e.target.style.backgroundColor = '#34495e';
+              }
+            }}
+            onMouseOut={(e) => {
+              if (!isActive('/owner/users')) {
+                e.target.style.backgroundColor = 'transparent';
+              }
+            }}
+          >
+            👥 Users {isActive('/owner/users') && '← Current'}
+          </Link>
+
+          <span style={{ color: '#bdc3c7', margin: '0 8px' }}>|</span>
+
+          <Link
             to="/owner/settings"
             style={isActive('/owner/settings') ? activeLinkStyle : inactiveLinkStyle}
             onMouseOver={(e) => {
@@ -197,6 +217,7 @@ function OwnerDashboard() {
         <Route path="customers" element={<Customers />} />
         <Route path="suppliers" element={<Suppliers />} />
         <Route path="transactions" element={<Transactions />} />
+        <Route path="users" element={<UserManagement />} />
         <Route path="settings" element={<Settings />} />
         <Route path="*" element={<Navigate to="products" replace />} />
       </Routes>

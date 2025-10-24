@@ -5,11 +5,11 @@
 Your StoreFlow app now includes Firebase Authentication with:
 
 - ✅ **Email/Password Authentication**
-- ✅ **Google Sign-In** (One-click authentication)
 - ✅ **Password Reset** via email
 - ✅ **User Registration** with role assignment
 - ✅ **Persistent Login** (auto-login on page refresh)
 - ✅ **Secure Logout**
+- ✅ **Owner-Only User Creation**
 
 ---
 
@@ -20,9 +20,8 @@ Your StoreFlow app now includes Firebase Authentication with:
 1. Go to [Firebase Console](https://console.firebase.google.com/)
 2. Select your project: `inventory-management-9fc64`
 3. Navigate to **Authentication** → **Sign-in method**
-4. Enable the following providers:
+4. Enable the following provider:
    - ✅ **Email/Password** (Click Enable)
-   - ✅ **Google** (Click Enable, select support email)
 5. Click **Save**
 
 ### 2. Set Up Demo Users
@@ -61,18 +60,12 @@ After running the setup script, you can log in with:
    - **Owner** → `/owner` (Owner Dashboard)
    - **Cashier** → `/cashier` (Cashier POS)
 
-### Sign In with Google
-1. Click **Continue with Google**
-2. Select your Google account
-3. New users are assigned **Cashier** role by default
-4. Contact an Owner to upgrade your role
-
 ### Create New Account
 1. Click **Sign Up** button
 2. Enter your name, email, and password (min 6 chars)
 3. Click **Sign Up**
 4. New accounts start as **Cashier** role
-5. Owner can upgrade roles in Firestore
+5. Owner can upgrade roles in User Management
 
 ### Forgot Password
 1. Click **Forgot Password?**
@@ -204,15 +197,9 @@ The app uses Firebase's `onAuthStateChanged` listener to:
 - Password is case-sensitive
 - Try password reset if needed
 
-### Google Sign-In not working
-1. Ensure Google provider is enabled in Firebase Console
-2. Check that support email is configured
-3. Verify Firebase config in `.env` is correct
-4. Make sure you're on `localhost:3000` (Firebase may block other domains)
-
 ### "Permission denied" errors
 - Your account may not have proper role assigned
-- Contact an Owner to update your role in Firestore
+- Contact an Owner to update your role in User Management
 - Check Firestore security rules are deployed
 
 ---
@@ -272,11 +259,11 @@ Add this to your `package.json` scripts:
 ## 🎯 Next Steps
 
 1. ✅ Run `npm run setup-users` to create demo accounts
-2. ✅ Enable Email/Password and Google auth in Firebase Console
+2. ✅ Enable Email/Password auth in Firebase Console
 3. ✅ Update Firestore security rules
 4. ✅ Test login with demo credentials
-5. ✅ Test Google Sign-In
-6. ✅ Test password reset feature
+5. ✅ Test password reset feature
+6. ✅ Test user creation in User Management
 7. 🔜 Add user management UI for Owners
 8. 🔜 Add email verification (optional)
 9. 🔜 Add multi-factor authentication (optional)

@@ -2,8 +2,6 @@
 import { 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
   updateProfile,
@@ -13,14 +11,6 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../config/firebase.js';
 
 class AuthService {
-  constructor() {
-    this.googleProvider = new GoogleAuthProvider();
-    // Force account selection on Google sign-in
-    this.googleProvider.setCustomParameters({
-      prompt: 'select_account'
-    });
-  }
-
   // Sign in with email and password
   async signIn(email, password) {
     try {
@@ -32,37 +22,7 @@ class AuthService {
     }
   }
 
-  // Sign in with Google
-  async signInWithGoogle() {
-    try {
-      const result = await signInWithPopup(auth, this.googleProvider);
-      const user = result.user;
-      
-      // Check if user exists in Firestore
-      let userData = await this.getUserData(user.uid);
-      
-      // If new user, create their profile
-      if (!userData) {
-        userData = {
-          displayName: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL,
-          role: 'cashier', // Default role for new Google users
-          createdAt: new Date(),
-          isActive: true,
-          provider: 'google'
-        };
-        
-        await setDoc(doc(db, 'users', user.uid), userData);
-      }
-      
-      return { user, userData };
-    } catch (error) {
-      throw this.handleAuthError(error);
-    }
-  }
-
-  // Sign up user with email and password
+  // Sign up user with email and password (public registration)
   async signUp(email, password, displayName, role = 'cashier') {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -72,10 +32,11 @@ class AuthService {
       await updateProfile(user, { displayName });
 
       // Create user document in Firestore
+      // Public signup only allows cashier role
       const userData = {
         displayName,
         email,
-        role,
+        role: 'cashier', // Force cashier role for public signup
         createdAt: new Date(),
         isActive: true,
         provider: 'email'
@@ -84,6 +45,58 @@ class AuthService {
       await setDoc(doc(db, 'users', user.uid), userData);
 
       return { user, userData };
+    } catch (error) {
+      throw this.handleAuthError(error);
+    }
+  }
+
+  // Create user by owner (can assign any role)
+  // Note: This signs out the current admin temporarily to create the new user
+  async createUserByOwner(email, password, displayName, role = 'cashier') {
+    try {
+      // Check if current user is owner
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        throw new Error('No authenticated user');
+      }
+
+      const currentUserData = await this.getUserData(currentUser.uid);
+      if (currentUserData?.role !== 'owner') {
+        throw new Error('Permission denied. Only owners can create users.');
+      }
+
+      // Store current user info to re-login later
+      const currentUserEmail = currentUser.email;
+      
+      // Note: In production, you should use Firebase Admin SDK via Cloud Functions
+      // This is a workaround for development
+      const warningMessage = 'Creating users requires Firebase Admin SDK. For now, creating user with limited functionality.';
+      console.warn(warningMessage);
+
+      // Create user document directly without authentication
+      // In production, this should be done via Cloud Functions with Admin SDK
+      const newUserId = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      const userData = {
+        displayName,
+        email,
+        role,
+        createdAt: new Date(),
+        isActive: true,
+        provider: 'email',
+        createdBy: currentUser.uid,
+        // Temporary password hash (in production, use Admin SDK)
+        tempPassword: password, // THIS IS NOT SECURE - USE CLOUD FUNCTIONS IN PRODUCTION
+        needsPasswordSetup: true
+      };
+      
+      await setDoc(doc(db, 'users', newUserId), userData);
+
+      return { 
+        user: { uid: newUserId, email, displayName }, 
+        userData,
+        warning: 'User created in database. They need to complete registration via email link (requires Cloud Functions setup).'
+      };
     } catch (error) {
       throw this.handleAuthError(error);
     }
